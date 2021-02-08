@@ -3,7 +3,7 @@ import zlib, struct
 class Firmware:
     def __init__(self):
         # Read the entire firmware
-        with open("firmware_dumps/canon_pixma_mx492.flashbin.BIN", "rb") as fd:
+        with open("../firmware_dumps/canon_pixma_mx492.flashbin.BIN", "rb") as fd:
             self.firmware = fd.read()
 
         # The start of compressed data
@@ -25,6 +25,8 @@ class Firmware:
 
         # 4-byte up align the pointer
         self.compressed_ptr = (self.compressed_ptr + 3) & ~3
+
+        print(len(compressed))
 
         return decompressed
 
