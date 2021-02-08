@@ -1,0 +1,2 @@
+The flash is 128 mbit from an 8-pin flash chip `W25Q128FVS0`
+
