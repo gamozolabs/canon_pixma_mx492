@@ -1,0 +1,2 @@
+DRAM model is MT47H64M16NF-25E:M
+
