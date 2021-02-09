@@ -65,6 +65,65 @@ void FUN_f002024c(void)
   return;
 }
 
+// src, dest, len
+void FUN_f028030c(byte *param_1,byte *param_2,int param_3)
+
+{
+  byte bVar1;
+  byte *pbVar2;
+  byte *pbVar3;
+  uint uVar4;
+  int iVar5;
+  uint uVar6;
+  uint uVar7;
+
+  byte *orig_param1 = param_1;
+  
+  pbVar3 = param_2 + param_3;
+  do {
+    uVar4 = (uint)*param_1;
+    pbVar2 = param_1 + 1;
+    uVar6 = uVar4 & 3;
+    if ((*param_1 & 3) == 0) {
+      uVar6 = (uint)*pbVar2;
+      pbVar2 = param_1 + 2;
+    }
+    uVar7 = (int)uVar4 >> 4;
+    if (uVar7 == 0) {
+      uVar7 = (uint)*pbVar2;
+      pbVar2 = pbVar2 + 1;
+    }
+    while (uVar6 = uVar6 - 1, uVar6 != 0) {
+      bVar1 = *pbVar2;
+      pbVar2 = pbVar2 + 1;
+      *param_2 = bVar1;
+      param_2 = param_2 + 1;
+    }
+    param_1 = pbVar2;
+    if (uVar7 != 0) {
+      param_1 = pbVar2 + 1;
+      uVar6 = (uVar4 << 0x1c) >> 0x1e;
+      if (uVar6 == 3) {
+        uVar6 = (uint)*param_1;
+        param_1 = pbVar2 + 2;
+      }
+      pbVar2 = param_2 + (uVar6 * -0x100 - (uint)*pbVar2);
+      iVar5 = uVar7 + 1;
+      do {
+        bVar1 = *pbVar2;
+        pbVar2 = pbVar2 + 1;
+        *param_2 = bVar1;
+        param_2 = param_2 + 1;
+        iVar5 = iVar5 + -1;
+      } while (-1 < iVar5);
+    }
+  } while (param_2 < pbVar3);
+
+  printf("Read 0x%x compressed bytes\n", param_1 - orig_param1);
+  return;
+}
+
+
 int main(void)
 {
 	if(sizeof(void*) != 4) {
@@ -113,6 +172,28 @@ int main(void)
 
 	// Write out the ram
 	if(fwrite(DAT_184d5000, 1, 0x185067c0 - 0x184d5000, fd) != 0x185067c0 - 0x184d5000) {
+		perror("fwrite() error ");
+		return -1;
+	}
+
+	// Decompress the payload implemented at `0xf028088e`
+	char *decompressed_large = malloc(0xfe5b20);
+	if(!decompressed_large) {
+		perror("malloc() error ");
+		return -1;
+	}
+
+	// Decompress it
+	FUN_f028030c(firmware + 0x281000, decompressed_large, 0xfe5b20);
+	
+	fd = fopen("decompressed_large.bin", "wb");
+	if(!fd) {
+		perror("fopen() error ");
+		return -1;
+	}
+
+	// Write out the ram
+	if(fwrite(decompressed_large, 1, 0xfe5b20, fd) != 0xfe5b20) {
 		perror("fwrite() error ");
 		return -1;
 	}
