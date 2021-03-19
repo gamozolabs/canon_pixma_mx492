@@ -146,7 +146,8 @@ int main(void)
 	}
 
 	// Open firmware
-	FILE *fd = fopen("../firmware_dumps/canon_pixma_mx492.flashbin.BIN", "rb");
+	//FILE *fd = fopen("../firmware_dumps/canon_pixma_mx492.flashbin.BIN", "rb");
+	FILE *fd = fopen("/home/pleb/Downloads/moose.BIN", "rb");
 	if(!fd) {
 		perror("fopen() error ");
 		return -1;

@@ -1,0 +1,11 @@
+[build]
+target = "armv4t-unknown-linux-gnueabi"
+
+[target.armv4t-unknown-linux-gnueabi]
+linker = "ld.lld"
+rustflags = ["-C", "link-args=--section-start=.entry_section=0x19742320 --nmagic"]
+
+[unstable]
+build-std = ["core", "compiler_builtins"]
+build-std-features = ["compiler-builtins-mem"]
+

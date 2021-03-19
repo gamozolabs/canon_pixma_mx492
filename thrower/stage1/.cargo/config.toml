@@ -1,0 +1,10 @@
+[build]
+target = "armv7a-none-eabi"
+
+[target.armv7a-none-eabi]
+linker = "ld.lld"
+rustflags = ["-C", "link-args=--section-start=.entry_section=0 --nmagic", "-C", "relocation-model=pic"]
+
+[unstable]
+build-std = ["core"]
+
